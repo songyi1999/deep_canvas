@@ -4,10 +4,9 @@ const canvas = createCanvas(416, 416);
 const ctx = canvas.getContext("2d");
 const canvas2 = createCanvas(416, 416);
 const ctx2 = canvas2.getContext("2d");
-const basedir = '/content/darknet'
-const totalnumber=100000
-ctx2.fillStyle="#fff"
-ctx2.fillRect(0,0,416 ,416 );
+const basedir = "./";
+const totalnumber = 10;
+
 let colors = [
   "#3d5f8490",
   "#aea45f90",
@@ -22,9 +21,9 @@ let colors = [
 
 //画长方形并返回
 function rect(obj) {
-  let { x, y, w, h,  rota } = obj;
-  let index=Math.floor(Math.random() * colors.length)
-  ctx.fillStyle =  colors[index];
+  let { x, y, w, h, rota } = obj;
+  let index = Math.floor(Math.random() * colors.length);
+  ctx.fillStyle = colors[index];
   if (!x) x = Math.ceil(Math.random() * (416 - 190)) + 100;
   if (!y) y = Math.ceil(Math.random() * (416 - 120)) + 40;
   if (!w) w = Math.ceil(Math.random() * 80 + 70);
@@ -33,7 +32,7 @@ function rect(obj) {
 
   ctx.rotate(rota);
   ctx.fillRect(x, y, w, h);
- 
+
   ctx2.drawImage(canvas, 0, 0);
 
   //长方形位置 x1 左上角位置 x2, 右上角位置,x3:右下角,x4:左下角
@@ -54,31 +53,36 @@ function rect(obj) {
   rw = rx + rw <= 416 ? rw : 416 - rx;
   rh = ry + rh <= 416 ? rh : 416 - ry;
 
-//   ctx2.strokeRect(rx, ry, rw, rh);//外框
+  //   ctx2.strokeRect(rx, ry, rw, rh);//外框
   ctx.rotate(-rota);
   ctx.clearRect(0, 0, 416, 416);
   //  const buffer = canvas2.toBuffer('image/jpg')
   // fs.writeFileSync(`./${filename}.jpg`, buffer)
   //按yolov3的格式生成标注
-  
-   
-   let x_per=  (rx+ rw/2)/416
-   let  y_per= (ry+rh/2)/416
-   let  w_per= rw/416
-   let  h_per=rh/416
-  return  index+' '+x_per+' '+y_per+' '+w_per+' '+h_per;
+
+  let x_per = (rx + rw / 2) / 416;
+  let y_per = (ry + rh / 2) / 416;
+  let w_per = rw / 416;
+  let h_per = rh / 416;
+  return index + " " + x_per + " " + y_per + " " + w_per + " " + h_per;
 }
 
 (async () => {
- for(let i=0;i<totalnumber;i++){
-     let  str=[]
-     for (let objnumber_per_image = 0; objnumber_per_image < 4; objnumber_per_image++) {
-    let obj = rect({});
-   str.push(obj)
+  for (let i = 0; i < totalnumber; i++) {
+    ctx2.clearRect(0, 0, 416, 416)
+    ctx2.fillStyle = "#fff";
+    ctx2.fillRect(0, 0, 416, 416);
+    let str = [];
+    for (
+      let objnumber_per_image = 0;
+      objnumber_per_image < 4;
+      objnumber_per_image++
+    ) {
+      let obj = rect({});
+      str.push(obj);
+    }
+    const buffer = canvas2.toBuffer("image/jpeg");
+    fs.writeFileSync(`${basedir}/images/${i}.jpg`, buffer);
+    fs.writeFileSync(`${basedir}/images/${i}.txt`, str.join("\n"));
   }
-    const buffer = canvas2.toBuffer('image/jpeg')
-  fs.writeFileSync(`${basedir}/images/${i}.jpg`, buffer)
-  fs.writeFileSync(`${basedir}/images/${i}.txt`, str.join('\n')  )
- }
-  
 })();
