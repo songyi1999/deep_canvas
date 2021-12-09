@@ -4,8 +4,8 @@ const canvas = createCanvas(416, 416);
 const ctx = canvas.getContext("2d");
 const canvas2 = createCanvas(416, 416);
 const ctx2 = canvas2.getContext("2d");
-const basedir = "./";
-const totalnumber = 10;
+const basedir = "/content/darknet";
+const totalnumber = 100000;
 
 let colors = [
   "#3d5f8490",
