@@ -4,6 +4,8 @@ const canvas = createCanvas(416, 416);
 const ctx = canvas.getContext("2d");
 const canvas2 = createCanvas(416, 416);
 const ctx2 = canvas2.getContext("2d");
+const basedir = '/content/darknet'
+const totalnumber=100000
 ctx2.fillStyle="#fff"
 ctx2.fillRect(0,0,416 ,416 );
 let colors = [
@@ -21,7 +23,7 @@ let colors = [
 //画长方形并返回
 function rect(obj) {
   let { x, y, w, h,  rota } = obj;
-  let index=Math.ceil(Math.random() * colors.length)
+  let index=Math.floor(Math.random() * colors.length)
   ctx.fillStyle =  colors[index];
   if (!x) x = Math.ceil(Math.random() * (416 - 190)) + 100;
   if (!y) y = Math.ceil(Math.random() * (416 - 120)) + 40;
@@ -68,15 +70,15 @@ function rect(obj) {
 }
 
 (async () => {
- for(let i=0;i<10;i++){
+ for(let i=0;i<totalnumber;i++){
      let  str=[]
      for (let objnumber_per_image = 0; objnumber_per_image < 4; objnumber_per_image++) {
     let obj = rect({});
    str.push(obj)
   }
     const buffer = canvas2.toBuffer('image/jpeg')
-  fs.writeFileSync(`./images/${i}.jpg`, buffer)
-  fs.writeFileSync(`./images/${i}.txt`, str.join('\n')  )
+  fs.writeFileSync(`${basedir}/images/${i}.jpg`, buffer)
+  fs.writeFileSync(`${basedir}/images/${i}.txt`, str.join('\n')  )
  }
   
 })();
